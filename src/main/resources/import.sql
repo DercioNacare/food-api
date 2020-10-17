@@ -1,0 +1,1 @@
+insert into cozinha(nome) values ('Tailandesa'), ('Italiana'), ('Brasileira'), ('Moçambicana');
