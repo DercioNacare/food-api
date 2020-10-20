@@ -1,6 +1,5 @@
 package com.dn.code.food.domain.repository;
 
-public interface CozinhaRepository 
-{
+public interface RestauranteRepository {
 
 }
