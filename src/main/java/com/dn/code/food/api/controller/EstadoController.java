@@ -7,21 +7,19 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.dn.code.food.domain.model.Cozinha;
-import com.dn.code.food.domain.repository.CozinhaRepository;
-
+import com.dn.code.food.domain.model.Estado;
+import com.dn.code.food.domain.repository.EstadoRepository;
 
 @RestController
-@RequestMapping("/cozinhas")
-public class CozinhaController 
+@RequestMapping("/estados")
+public class EstadoController 
 {
-
 	@Autowired
-	private CozinhaRepository cozinhaRepository;
-	
+	private EstadoRepository estadoRepository;
+
 	@GetMapping
-	public List<Cozinha> listar()
+	public List<Estado> listar()
 	{
-		return cozinhaRepository.findAll();
+		return estadoRepository.findAll();
 	}
 }
