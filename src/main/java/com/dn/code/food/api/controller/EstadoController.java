@@ -1,8 +1,10 @@
 package com.dn.code.food.api.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,8 +27,10 @@ public class EstadoController
 	}
 	
 	@GetMapping("/{codigo}")
-	public Estado buscar(@PathVariable("codigo")Long codigo)
+	public ResponseEntity<Estado> buscar(@PathVariable("codigo")Long codigo)
 	{
-		return estadoRepository.findById(codigo).get();
+		Optional<Estado> estado = estadoRepository.findById(codigo);
+		
+		return  estado.isPresent() ? ResponseEntity.ok(estado.get()) : ResponseEntity.notFound().build();
 	}
 }

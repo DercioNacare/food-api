@@ -1,8 +1,10 @@
 package com.dn.code.food.api.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,8 +29,10 @@ public class CozinhaController
 	}
 	
 	@GetMapping("/{codigo}")
-	public Cozinha buscar(@PathVariable("codigo") Long codigo)
+	public ResponseEntity<Cozinha> buscar(@PathVariable("codigo") Long codigo)
 	{
-		return cozinhaRepository.findById(codigo).get();
+		Optional<Cozinha> cozinha = cozinhaRepository.findById(codigo);
+		
+		return cozinha.isPresent() ? ResponseEntity.ok(cozinha.get()) : ResponseEntity.notFound().build(); 
 	}
 }
