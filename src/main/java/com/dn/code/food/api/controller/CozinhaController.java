@@ -17,11 +17,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.dn.code.food.domain.exception.EntidadeEmUsoException;
+import com.dn.code.food.domain.exception.EntidadeNaoEncontradaException;
 import com.dn.code.food.domain.model.Cozinha;
 import com.dn.code.food.domain.repository.CozinhaRepository;
-import com.dn.code.food.domian.exception.EntidadeEmUsoException;
-import com.dn.code.food.domian.exception.EntidadeNaoEncontradaException;
-import com.dn.code.food.domian.service.CozinhaService;
+import com.dn.code.food.domain.service.CozinhaService;
 
 
 @RestController

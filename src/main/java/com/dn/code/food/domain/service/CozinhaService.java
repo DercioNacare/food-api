@@ -1,14 +1,14 @@
-package com.dn.code.food.domian.service;
+package com.dn.code.food.domain.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
+import com.dn.code.food.domain.exception.EntidadeEmUsoException;
+import com.dn.code.food.domain.exception.EntidadeNaoEncontradaException;
 import com.dn.code.food.domain.model.Cozinha;
 import com.dn.code.food.domain.repository.CozinhaRepository;
-import com.dn.code.food.domian.exception.EntidadeEmUsoException;
-import com.dn.code.food.domian.exception.EntidadeNaoEncontradaException;
 
 @Service
 public class CozinhaService 

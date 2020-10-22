@@ -1,4 +1,4 @@
-package com.dn.code.food.domian.exception;
+package com.dn.code.food.domain.exception;
 
 public class EntidadeNaoEncontradaException extends RuntimeException 
 {
