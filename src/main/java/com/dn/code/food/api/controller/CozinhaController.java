@@ -3,12 +3,16 @@ package com.dn.code.food.api.controller;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -45,5 +49,40 @@ public class CozinhaController
 	public Cozinha salvar(@RequestBody Cozinha cozinha)
 	{
 		return cozinhaRepository.save(cozinha);
+	}
+	
+	
+	@PutMapping("/{codigo}")
+	public ResponseEntity<Cozinha> atualizar(@PathVariable("codigo") Long codigo, @RequestBody Cozinha cozinha)
+	{
+		Optional<Cozinha> cozinhaActual = cozinhaRepository.findById(codigo);
+	
+		if(cozinhaActual.isPresent())
+		{
+			BeanUtils.copyProperties(cozinha, cozinhaActual.get(), "codigo");
+			return ResponseEntity.ok(cozinhaRepository.save(cozinhaActual.get()));
+		}
+		
+		return ResponseEntity.notFound().build();
+	}
+	
+	@DeleteMapping("/{codigo}")
+	public ResponseEntity<Cozinha> remover(@PathVariable("codigo") Long codigo)
+	{
+		try
+		{
+		
+			Optional<Cozinha> cozinhaActual = cozinhaRepository.findById(codigo);
+			
+			if(cozinhaActual.isPresent())
+			{
+				cozinhaRepository.delete(cozinhaActual.get());
+				return ResponseEntity.noContent().build();
+			}
+			return ResponseEntity.notFound().build();
+		}catch(DataIntegrityViolationException e)
+		{
+			return ResponseEntity.status(HttpStatus.CONFLICT).build();
+		}
 	}
 }
