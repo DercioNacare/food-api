@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.dn.code.food.domain.model.Cozinha;
 import com.dn.code.food.domain.repository.CozinhaRepository;
+import com.dn.code.food.domian.service.CozinhaService;
 
 
 @RestController
@@ -29,6 +30,9 @@ public class CozinhaController
 
 	@Autowired
 	private CozinhaRepository cozinhaRepository;
+	
+	@Autowired
+	private CozinhaService cozinhaService;
 	
 	@GetMapping
 	public List<Cozinha> listar()
@@ -48,7 +52,7 @@ public class CozinhaController
 	@ResponseStatus(HttpStatus.CREATED)
 	public Cozinha salvar(@RequestBody Cozinha cozinha)
 	{
-		return cozinhaRepository.save(cozinha);
+		return cozinhaService.salvar(cozinha);
 	}
 	
 	
