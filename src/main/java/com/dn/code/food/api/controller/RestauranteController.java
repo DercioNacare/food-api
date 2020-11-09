@@ -1,6 +1,7 @@
 package com.dn.code.food.api.controller;
 
 import java.lang.reflect.Field;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -36,6 +37,13 @@ public class RestauranteController
 	
 	@Autowired
 	private RestauranteService restauranteService;
+	
+	
+	@GetMapping("/teste")
+	public List<Restaurante> teste(String nome, BigDecimal taxaFreteInicial, BigDecimal taxaFreteFinal)
+	{
+		return restauranteRepository.find(nome, taxaFreteInicial, taxaFreteFinal);
+	}
 	
 	@GetMapping
 	public List<Restaurante> listar()
