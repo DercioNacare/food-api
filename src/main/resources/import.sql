@@ -12,3 +12,4 @@ insert into forma_pagamento(descricao) values("Cartão de crédito"), ("Cartão 
 
 insert into restaurante_forma_pagamento(codigo_restaurante, codigo_forma_pagamento) values(1,1);
 
+insert into produto(nome,descricao,preco,activo, codigo_restaurante) values("Chouriço","Chouriço importado de portugal", 350,true,1) 
