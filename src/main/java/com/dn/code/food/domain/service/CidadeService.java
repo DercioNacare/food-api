@@ -20,7 +20,7 @@ public class CidadeService
 	
 	@Autowired private EstadoService estadoService;
 	
-	public Cidade Salvar(Cidade cidade)
+	public Cidade salvar(Cidade cidade)
 	{
 		Long codigoEstado = cidade.getEstado().getCodigo();
 		

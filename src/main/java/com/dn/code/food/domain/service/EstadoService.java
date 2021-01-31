@@ -6,14 +6,13 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import com.dn.code.food.domain.exception.EntidadeEmUsoException;
-import com.dn.code.food.domain.exception.EntidadeNaoEncontradaException;
+import com.dn.code.food.domain.exception.EstadoNaoEncontradoException;
 import com.dn.code.food.domain.model.Estado;
 import com.dn.code.food.domain.repository.EstadoRepository;
 
 @Service
 public class EstadoService 
 {
-	private static final String MSG_ESTADO_NAO_ENCONTRADO = "Estado de código %d não encontrado";
 	@Autowired
 	private EstadoRepository estadoRepository;
 	
@@ -30,7 +29,7 @@ public class EstadoService
 		}
 		catch(EmptyResultDataAccessException e)
 		{
-			throw new EntidadeNaoEncontradaException(String.format(MSG_ESTADO_NAO_ENCONTRADO, codigo));
+			throw new EstadoNaoEncontradoException(codigo);
 		}
 		catch(DataIntegrityViolationException e)
 		{
@@ -40,6 +39,6 @@ public class EstadoService
 
 	public Estado buscarOuFalhar(Long codigo) 
 	{
-		return estadoRepository.findById(codigo).orElseThrow(()-> new EntidadeNaoEncontradaException(String.format(MSG_ESTADO_NAO_ENCONTRADO,codigo)));
+		return estadoRepository.findById(codigo).orElseThrow(()-> new EstadoNaoEncontradoException(codigo));
 	}
 }

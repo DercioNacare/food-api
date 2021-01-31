@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.dn.code.food.domain.exception.EntidadeNaoEncontradaException;
+import com.dn.code.food.domain.exception.NegocioException;
 import com.dn.code.food.domain.model.Restaurante;
 import com.dn.code.food.domain.repository.RestauranteRepository;
 import com.dn.code.food.domain.service.RestauranteService;
@@ -58,7 +60,14 @@ public class RestauranteController
 	@ResponseStatus(HttpStatus.CREATED)
 	public Restaurante salvar(@RequestBody Restaurante restaurante)
 	{
-		return restauranteService.salvar(restaurante);
+		try
+		{
+			return restauranteService.salvar(restaurante);
+		}
+		catch(EntidadeNaoEncontradaException e)
+		{
+			throw new NegocioException(e.getMessage());
+		}
 	}
 	
 	@PutMapping("/{codigo}")
@@ -67,7 +76,7 @@ public class RestauranteController
 		Restaurante restauranteSalvo = restauranteService.buscarOuFalhar(codigo);
 		
 		BeanUtils.copyProperties(restaurante, restauranteSalvo, "codigo", "formasPagamento", "endereco", "dataCadastro", "produtos") ;
-		return  restauranteService.salvar(restauranteSalvo);
+		return salvar(restauranteSalvo);
 	}
 	
 	@PatchMapping("/{codigo}")
