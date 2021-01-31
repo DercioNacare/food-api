@@ -1,27 +1,30 @@
 package com.dn.code.food.domain.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
+import com.dn.code.food.domain.exception.EntidadeEmUsoException;
 import com.dn.code.food.domain.exception.EntidadeNaoEncontradaException;
 import com.dn.code.food.domain.model.Cidade;
 import com.dn.code.food.domain.model.Estado;
 import com.dn.code.food.domain.repository.CidadeRepository;
-import com.dn.code.food.domain.repository.EstadoRepository;
 
 @Service
 public class CidadeService  
 {
+	private static final String MSG_CIDADE_NAO_ENCONTRADA = "Cidade de código %d não ecnontrada";
+
 	@Autowired private CidadeRepository cidadeRepository;
 	
-	@Autowired private EstadoRepository estadoRepository;
+	@Autowired private EstadoService estadoService;
 	
 	public Cidade Salvar(Cidade cidade)
 	{
 		Long codigoEstado = cidade.getEstado().getCodigo();
 		
-		Estado estado = estadoRepository.findById(codigoEstado).orElseThrow(() -> new EntidadeNaoEncontradaException(String.format("Estado de código %d não encontrado", codigoEstado)));
+		Estado estado = estadoService.buscarOuFalhar(codigoEstado);
 		
 		cidade.setEstado(estado);
 		
@@ -36,8 +39,17 @@ public class CidadeService
 		}
 		catch(EmptyResultDataAccessException e)
 		{
-			throw new EntidadeNaoEncontradaException(String.format("Cidade de código %d não ecnontrada", codigo));
+			throw new EntidadeNaoEncontradaException(String.format(MSG_CIDADE_NAO_ENCONTRADA, codigo));
 		}
+		catch(DataIntegrityViolationException e)
+		{
+			throw new EntidadeEmUsoException(String.format("Cidade de código %d não pode ser removida, por estar em uso em outra entidade", codigo));
+		}
+	}
+
+	public Cidade buscarOuFalhar(Long codigo) 
+	{
+		return cidadeRepository.findById(codigo).orElseThrow(() -> new EntidadeNaoEncontradaException(String.format(MSG_CIDADE_NAO_ENCONTRADA, codigo)));
 	}
 	
 }	

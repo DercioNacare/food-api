@@ -1,12 +1,10 @@
 package com.dn.code.food.api.controller;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,8 +15,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.dn.code.food.domain.exception.EntidadeEmUsoException;
-import com.dn.code.food.domain.exception.EntidadeNaoEncontradaException;
 import com.dn.code.food.domain.model.Estado;
 import com.dn.code.food.domain.repository.EstadoRepository;
 import com.dn.code.food.domain.service.EstadoService;
@@ -37,11 +33,9 @@ public class EstadoController
 	}
 	
 	@GetMapping("/{codigo}")
-	public ResponseEntity<Estado> buscar(@PathVariable("codigo")Long codigo)
+	public Estado buscar(@PathVariable("codigo")Long codigo)
 	{
-		Optional<Estado> estado = estadoRepository.findById(codigo);
-		
-		return  estado.isPresent() ? ResponseEntity.ok(estado.get()) : ResponseEntity.notFound().build();
+		return estadoService.buscarOuFalhar(codigo);		
 	}
 	
 	@PostMapping @ResponseStatus(HttpStatus.CREATED)
@@ -51,34 +45,18 @@ public class EstadoController
 	}
 	
 	@PutMapping("/{codigo}")
-	public ResponseEntity<?> atualizar(@PathVariable("codigo") Long codigo, @RequestBody Estado estado)
+	public Estado atualizar(@PathVariable("codigo") Long codigo, @RequestBody Estado estado)
 	{
-		Optional<Estado> estadoSalvo = estadoRepository.findById(codigo);
+		Estado estadoSalvo = estadoService.buscarOuFalhar(codigo);
 		
-		if(estadoSalvo.isPresent())
-		{
-			BeanUtils.copyProperties(estado, estadoSalvo.get(), "codigo");
-			estadoService.salvar(estadoSalvo.get());
-			return ResponseEntity.ok(estadoSalvo.get());
-		}
-		return ResponseEntity.notFound().build();
+		BeanUtils.copyProperties(estado, estadoSalvo, "codigo");
+		return estadoService.salvar(estadoSalvo);
 	}
 	
 	@DeleteMapping("/{codigo}")
-	public ResponseEntity<?> remover(@PathVariable("codigo") Long codigo)
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void remover(@PathVariable("codigo") Long codigo)
 	{
-		try
-		{
-			estadoService.remover(codigo);
-			return ResponseEntity.noContent().build();
-		}
-		catch(EntidadeNaoEncontradaException e)
-		{
-			return ResponseEntity.notFound().build();
-		}
-		catch(EntidadeEmUsoException e)
-		{
-			return ResponseEntity.status(HttpStatus.CONFLICT).build();
-		}
+		estadoService.remover(codigo);
 	}
 }

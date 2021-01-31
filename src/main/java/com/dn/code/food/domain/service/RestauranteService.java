@@ -6,7 +6,6 @@ import org.springframework.stereotype.Service;
 import com.dn.code.food.domain.exception.EntidadeNaoEncontradaException;
 import com.dn.code.food.domain.model.Cozinha;
 import com.dn.code.food.domain.model.Restaurante;
-import com.dn.code.food.domain.repository.CozinhaRepository;
 import com.dn.code.food.domain.repository.RestauranteRepository;
 
 @Service
@@ -15,15 +14,19 @@ public class RestauranteService
 	
 	@Autowired private RestauranteRepository restauranteRepository;
 	
-	@Autowired private CozinhaRepository cozinhaRepository;
+	@Autowired private CozinhaService cozinhaService;
 	
 	public Restaurante salvar(Restaurante restaurante)
 	{
 		Long codigoCozinha = restaurante.getCozinha().getCodigo();
 		
-		Cozinha cozinha = cozinhaRepository.findById(codigoCozinha).orElseThrow(() -> new EntidadeNaoEncontradaException(String.format("Cozinha de código %d não encontrada", codigoCozinha)));
+		Cozinha cozinha = cozinhaService.buscarOuFalhar(codigoCozinha);
 		
 		restaurante.setCozinha(cozinha);
 		return restauranteRepository.save(restaurante);
+	}
+
+	public Restaurante buscarOuFalhar(Long codigo) {
+		return restauranteRepository.findById(codigo).orElseThrow(() -> new EntidadeNaoEncontradaException(String.format("Restaurante de codigo %d não encontrado",codigo)));
 	}
 }
