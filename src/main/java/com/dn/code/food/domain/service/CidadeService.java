@@ -5,8 +5,8 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
+import com.dn.code.food.domain.exception.CidadeNaoEncontradaException;
 import com.dn.code.food.domain.exception.EntidadeEmUsoException;
-import com.dn.code.food.domain.exception.EntidadeNaoEncontradaException;
 import com.dn.code.food.domain.model.Cidade;
 import com.dn.code.food.domain.model.Estado;
 import com.dn.code.food.domain.repository.CidadeRepository;
@@ -14,8 +14,7 @@ import com.dn.code.food.domain.repository.CidadeRepository;
 @Service
 public class CidadeService  
 {
-	private static final String MSG_CIDADE_NAO_ENCONTRADA = "Cidade de código %d não ecnontrada";
-
+	
 	@Autowired private CidadeRepository cidadeRepository;
 	
 	@Autowired private EstadoService estadoService;
@@ -39,7 +38,7 @@ public class CidadeService
 		}
 		catch(EmptyResultDataAccessException e)
 		{
-			throw new EntidadeNaoEncontradaException(String.format(MSG_CIDADE_NAO_ENCONTRADA, codigo));
+			throw new CidadeNaoEncontradaException(codigo);
 		}
 		catch(DataIntegrityViolationException e)
 		{
@@ -49,7 +48,7 @@ public class CidadeService
 
 	public Cidade buscarOuFalhar(Long codigo) 
 	{
-		return cidadeRepository.findById(codigo).orElseThrow(() -> new EntidadeNaoEncontradaException(String.format(MSG_CIDADE_NAO_ENCONTRADA, codigo)));
+		return cidadeRepository.findById(codigo).orElseThrow(() -> new CidadeNaoEncontradaException(codigo));
 	}
 	
 }	

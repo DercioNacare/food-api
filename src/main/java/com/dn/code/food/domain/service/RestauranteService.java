@@ -3,7 +3,7 @@ package com.dn.code.food.domain.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.dn.code.food.domain.exception.EntidadeNaoEncontradaException;
+import com.dn.code.food.domain.exception.RestauranteNaoEncontradoException;
 import com.dn.code.food.domain.model.Cozinha;
 import com.dn.code.food.domain.model.Restaurante;
 import com.dn.code.food.domain.repository.RestauranteRepository;
@@ -27,6 +27,6 @@ public class RestauranteService
 	}
 
 	public Restaurante buscarOuFalhar(Long codigo) {
-		return restauranteRepository.findById(codigo).orElseThrow(() -> new EntidadeNaoEncontradaException(String.format("Restaurante de codigo %d não encontrado",codigo)));
+		return restauranteRepository.findById(codigo).orElseThrow(() -> new RestauranteNaoEncontradoException(codigo));
 	}
 }
